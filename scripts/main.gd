@@ -777,7 +777,7 @@ func _zoom_dialog() -> void:
 			_close_modal())
 
 func _settings() -> void:
-	var stack = _modal(412)
+	var stack = _modal(474)
 	_modal_title(stack,"Make yourself at home")
 	for setting in [["sound_enabled","sound","Happy little sounds"],["haptics_enabled","heart","Gentle haptics"]]:
 		var row = UI.hbox(stack,12)
@@ -796,7 +796,27 @@ func _settings() -> void:
 	var body = UI.label("%d original puzzles, always offline. Your progress is saved on this device. No ads, no accounts, no interruptions." % state.get_catalog().size(),15,UI.MUTED)
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	inner.add_child(body)
+	var privacy = UI.button("Privacy policy",Color("ede6ff"),UI.PURPLE,44)
+	stack.add_child(privacy)
+	privacy.pressed.connect(_privacy_policy)
 	stack.add_child(UI.label("PIECEPOP  /  MADE FOR LITTLE MOMENTS",11,UI.MUTED,800))
+
+func _privacy_policy() -> void:
+	var stack = _modal(720)
+	_modal_title(stack,"Privacy policy")
+	var scroll = ScrollContainer.new()
+	scroll.name = "PrivacyScroll"
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	stack.add_child(scroll)
+	var policy = UI.label(FileAccess.get_file_as_string("res://assets/legal/privacy-policy.txt"),16,UI.INK)
+	policy.name = "PrivacyText"
+	policy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	policy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(policy)
+	var back = UI.button("Back to settings",UI.PURPLE,Color.WHITE,48)
+	stack.add_child(back)
+	back.pressed.connect(_settings)
 
 func _toast(message: String) -> void:
 	if frame == null: return

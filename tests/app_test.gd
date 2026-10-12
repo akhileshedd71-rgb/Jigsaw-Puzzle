@@ -198,6 +198,18 @@ func _run() -> void:
 	_check(app.state.puzzle_by_id("alpine_escape").asset.ends_with(".png"), "Hero catalog uses the generated Alpine Escape artwork.")
 	_check(_button(app.page, "Toucan Tropics") != null, "Locked collection appears in gallery.")
 	await _exercise_expanded_gallery()
+	app._settings()
+	_check(_button(app.overlay, "Privacy policy") != null, "Privacy policy is available from settings.")
+	_press(app.overlay, "Privacy policy")
+	await _settle_layout()
+	var policy: Label = app.overlay.find_child("PrivacyText", true, false) as Label
+	_check(policy != null and policy.text.contains("Akhilesh Mahto") and policy.text.contains("akhileshedd@gmail.com"), "The offline privacy policy identifies the developer and support contact.")
+	_check(policy != null and policy.text.contains("com.akhileshedd.piecepop"), "The privacy policy matches the release application ID.")
+	var privacy_scroll: ScrollContainer = app.overlay.find_child("PrivacyScroll", true, false) as ScrollContainer
+	_check(privacy_scroll != null and privacy_scroll.get_v_scroll_bar().max_value > privacy_scroll.size.y, "The complete policy can be scrolled on a phone.")
+	_press(app.overlay, "Back to settings")
+	_check(_button(app.overlay, "Privacy policy") != null, "The privacy page returns to settings.")
+	app._close_modal()
 
 	if not _press(app.page, "Play Alpine Escape"):
 		await _finish()

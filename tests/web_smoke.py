@@ -53,6 +53,7 @@ def main():
     parser.add_argument("--url", default="http://127.0.0.1:8060/")
     parser.add_argument("--chromium", default=shutil.which("chromium") or shutil.which("google-chrome"))
     parser.add_argument("--screenshots", type=Path, default=Path(__file__).resolve().parents[1] / "builds" / "screenshots")
+    parser.add_argument("--device-scale-factor", type=float, default=1, help="Use 2.25 for 1080 × 2025 store screenshots captured directly from the app")
     args = parser.parse_args()
     args.screenshots.mkdir(parents=True, exist_ok=True)
     errors = []
@@ -68,7 +69,7 @@ def main():
             args=["--no-sandbox", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
         )
         # A new context keeps this test's progress separate from real players.
-        context = browser.new_context(viewport={"width": 480, "height": 900}, device_scale_factor=1)
+        context = browser.new_context(viewport={"width": 480, "height": 900}, device_scale_factor=args.device_scale_factor)
         page = context.new_page()
         monitor(page)
 
@@ -92,6 +93,8 @@ def main():
         capture("selection")
         page.mouse.click(238, 800)
         page.wait_for_timeout(3600)
+        # Wait for the first rendered board before dragging, including at high DPI.
+        capture("gameplay-start")
 
         # The seeded first Alpine piece is #19; drag it via the real input path.
         page.mouse.move(78, 719)
@@ -146,7 +149,7 @@ def main():
         context.close()
 
         # Selecting New must surface Macaron Morning, which is playable for free.
-        expansion = browser.new_context(viewport={"width": 480, "height": 900}, device_scale_factor=1)
+        expansion = browser.new_context(viewport={"width": 480, "height": 900}, device_scale_factor=args.device_scale_factor)
         expansion_page = expansion.new_page()
         monitor(expansion_page)
         expansion_page.goto(args.url, wait_until="networkidle")
@@ -161,6 +164,7 @@ def main():
         expansion_page.screenshot(path=str(args.screenshots / "macaron-selection-400.png"))
         expansion_page.mouse.click(238, 800)
         expansion_page.wait_for_timeout(3600)
+        expansion_page.screenshot(path=str(args.screenshots / "macaron-gameplay-start.png"))
         expansion_page.mouse.click(53, 842)
         expansion_page.mouse.click(145, 842)
         expansion_page.mouse.move(240, 350)

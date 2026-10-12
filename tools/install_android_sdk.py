@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the small Linux SDK subset needed for Godot's non-Gradle APK export.
+"""Install verified Linux SDK packages for Godot APK or Gradle/AAB export.
 
 This does not install Gradle, the Android NDK, an emulator, or release credentials.
 Archive checksums are verified against Google's official SDK repository metadata.
@@ -27,7 +27,7 @@ def install_package(repository, package, destination, required_files):
         print(f"Reusing {package} at {destination}")
         return
     entry = next(node for node in repository.findall("remotePackage") if node.attrib["path"] == package)
-    archive = next(node for node in entry.findall("./archives/archive") if node.findtext("host-os") == "linux")
+    archive = next(node for node in entry.findall("./archives/archive") if node.findtext("host-os") in (None, "linux"))
     complete = archive.find("complete")
     url = complete.findtext("url")
     checksum_entry = complete.find("checksum")
@@ -87,6 +87,7 @@ def main():
     default_sdk = Path(os.environ.get("ANDROID_SDK_ROOT", Path.home() / "Android" / "Sdk"))
     parser.add_argument("--sdk-root", type=Path, default=default_sdk)
     parser.add_argument("--configure-godot", action="store_true", help="Set only the Android SDK and Java paths in Godot 4.6 editor settings")
+    parser.add_argument("--gradle", action="store_true", help="Also install SDK 36, Build-Tools 36.1.0, and sdkmanager for AAB export")
     parser.add_argument("--java-home", type=Path, default=None)
     args = parser.parse_args()
     if platform.system() != "Linux" or platform.machine() not in ("x86_64", "AMD64"):
@@ -101,9 +102,15 @@ def main():
         repository = ElementTree.fromstring(response.read())
     install_package(repository, "platform-tools", sdk_root / "platform-tools", ("adb", "source.properties"))
     install_package(repository, f"build-tools;{BUILD_TOOLS}", sdk_root / "build-tools" / BUILD_TOOLS, ("apksigner", "lib/apksigner.jar", "aapt", "source.properties"))
+    if args.gradle:
+        install_package(repository, "cmdline-tools;latest", sdk_root / "cmdline-tools" / "latest", ("bin/sdkmanager", "source.properties"))
+        install_package(repository, "platforms;android-36", sdk_root / "platforms" / "android-36", ("android.jar", "source.properties"))
+        install_package(repository, "build-tools;36.1.0", sdk_root / "build-tools" / "36.1.0", ("apksigner", "aapt2", "source.properties"))
     if args.configure_godot:
         configure_editor(sdk_root, java_home.resolve())
-    print("Native APK export prerequisites are ready. Install the matching Godot export templates too.")
+    print("Android SDK packages are ready. Install the matching Godot export templates too.")
+    if args.gradle:
+        print("AAB builds also require a full JDK with javac and the Godot Android build template.")
 
 
 if __name__ == "__main__":

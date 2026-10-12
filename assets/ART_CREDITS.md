@@ -54,6 +54,8 @@ The following 20 PNG illustrations were added for version 0.3.0, each as a separ
 - `clockwork_square.png` — Clockwork Square (Architecture).
 - `floating_palazzo.png` — Floating Palazzo (Architecture).
 
+The Play Store feature graphic in `store_listing/graphics/feature-1024x500.png` was created with OpenAI image generation using Alpine Escape as its artwork reference. The listing icon is a 512-pixel rasterization of the game's original SVG icon. The listing screenshots are direct captures of the running game.
+
 The project owner may use, modify, redistribute, and publish these original assets with this game, including commercially. No additional asset attribution is required. This note documents the assets' provenance; it does not grant rights to third-party trademarks or imply any connection to Easybrain.
 
 The SVG illustrations use a 1024 × 1024 view box, standard paths, flat fills, and linear gradients for crisp scaling and Godot compatibility. Keep SVG originals when preparing higher-resolution exports.

@@ -5,3 +5,12 @@ builds/
 .DS_Store
 __pycache__/
 *.py[cod]
+
+# Generated Android Gradle project and private signing material.
+android/
+*.jks
+*.keystore
+*.p12
+*.pfx
+*keystore-password*.txt
+*upload-key-backup*.zip

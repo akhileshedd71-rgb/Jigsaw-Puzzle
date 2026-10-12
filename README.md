@@ -89,6 +89,8 @@ Serve the build locally with the command above. The onboarding UI does not expos
 
 ## Android
 
+For the Play Store release **1.0.0**, use package **com.akhileshedd.piecepop** and the dedicated **Google Play** AAB preset. The [publishing kit](store_listing/README.md) contains listing text, full-resolution phone screenshots, graphics, privacy-policy files, and release/signing instructions. Use `tools/build_play_bundle.py` to create a signed AAB with your private upload key. Keep the key and password outside Git. The new application ID installs separately from the earlier `com.piecepop.game` debug app.
+
 The included `Android` preset targets ARM64 phones in portrait orientation. Install **OpenJDK 17**, the Android SDK, and Godot's matching export templates. In **Editor Settings → Export → Android**, set **Java SDK Path** and **Android SDK Path**. Follow [Godot's Android export documentation](https://docs.godotengine.org/en/4.6/tutorials/export/exporting_for_android.html) for the required SDK components and debug signing setup.
 
 For Linux x86_64, the standard-library helper `python3 tools/install_android_sdk.py --sdk-root /path/to/android-sdk --configure-godot` installs Google's checksum-verified platform tools and Build-Tools 36.0.0, then sets the SDK and Java paths in Godot's editor settings. This small SDK subset is sufficient for the supplied non-Gradle APK preset. Gradle/AAB builds need the full Android SDK setup from the official guide.
