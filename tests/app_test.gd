@@ -101,21 +101,29 @@ func _check_filter_visible(caption: String) -> void:
 
 func _exercise_expanded_gallery() -> void:
 	var all_titles: Array[String] = _gallery_titles()
-	_check(all_titles.size() == 24 and _has_label(app.page, "24 little escapes"), "All filter displays the complete expanded gallery and its count.")
-	_check(all_titles.find("Sakura Stroll") == 0 and all_titles.find("Alpine Escape") == 18,
-		"New artwork leads the gallery while all six original puzzles remain available.")
+	_check(all_titles.size() == 44 and _has_label(app.page, "44 little escapes"), "All filter displays the complete expanded gallery and its count.")
+	_check(all_titles.find("Macaron Morning") == 0 and all_titles.find("Alpine Escape") == 20,
+		"New artwork leads the gallery while all twenty-four previous puzzles remain available.")
+	_check(app.textures.size() <= 3, "Gallery does not retain all full-resolution puzzle textures.")
+	_check(app.thumbnails.size() == 44 and app.thumbnails.values().all(func(texture): return texture.get_width() == 512), "Gallery uses compact previews for the complete collection.")
 	var previous_gallery: WeakRef = weakref(app.page)
 	_press(app.page, "New")
 	await _settle_layout()
 	_check(previous_gallery.get_ref() == null, "Rebuilding the expanded gallery frees its previous card nodes.")
 	var new_grid: GridContainer = _gallery_grid(app.page)
-	_check(_gallery_titles().size() == 18 and _has_label(app.page, "18 little escapes"), "New filter displays exactly the eighteen added puzzle cards.")
-	_check(new_grid != null and _button(new_grid, "Alpine Escape") == null and _button(new_grid, "Toucan Tropics") == null,
+	_check(_gallery_titles().size() == 20 and _has_label(app.page, "20 little escapes"), "New filter displays exactly the twenty added puzzle cards.")
+	_check(new_grid != null and _button(new_grid, "Alpine Escape") == null and _button(new_grid, "Toucan Tropics") == null and _button(new_grid, "Sakura Stroll") == null,
 		"New filter excludes original gallery cards without counting the separate Alpine hero.")
 	_check(_button(app.page, "Play Alpine Escape") != null, "The original featured puzzle remains playable while filtering new cards.")
-	_check(new_grid != null and _has_label(_button(new_grid, "Sakura Stroll"), "NEW"), "New artwork has its visible discovery badge.")
+	_check(new_grid != null and _has_label(_button(new_grid, "Macaron Morning"), "NEW"), "New artwork has its visible discovery badge.")
 	_check_filter_visible("New")
 	for category_case: Dictionary in [
+		{"filter": "Food", "titles": ["Berry Brunch", "Gelato Parade", "Macaron Morning", "Sushi Symphony"]},
+		{"filter": "Space", "titles": ["Comet Express", "Lunar Greenhouse", "Nebula Observatory", "Saturn Picnic"]},
+		{"filter": "Dinosaurs", "titles": ["Dino Watering Hole", "Pterosaur Lagoon", "Triceratops Trail"]},
+		{"filter": "Festivals", "titles": ["Carnival of Colors", "Lantern River", "Winter Market"]},
+		{"filter": "Cozy Rooms", "titles": ["Artist Sunroom", "Baker Workshop", "Storybook Library"]},
+		{"filter": "Architecture", "titles": ["Clockwork Square", "Floating Palazzo", "Mosaic Courtyard"]},
 		{"filter": "Places", "titles": ["Lighthouse Bay", "Rainbow Harbor", "Sakura Stroll"]},
 		{"filter": "Fantasy", "titles": ["Balloon Valley", "Cosmic Carnival", "Starlight Castle"]},
 	]:
@@ -123,25 +131,26 @@ func _exercise_expanded_gallery() -> void:
 		await _settle_layout()
 		var titles: Array[String] = _gallery_titles()
 		titles.sort()
-		_check(titles == category_case.titles and _has_label(app.page, "3 little escapes"),
-			"%s filter displays its three matching artwork cards and count." % category_case.filter)
+		_check(titles == category_case.titles and _has_label(app.page, "%d little escapes" % category_case.titles.size()),
+			"%s filter displays its matching artwork cards and count." % category_case.filter)
 		_check_filter_visible(category_case.filter)
 	_press(app.page, "New")
 	await _settle_layout()
-	_press(_gallery_grid(app.page), "Sakura Stroll")
+	_press(_gallery_grid(app.page), "Macaron Morning")
 	_check(is_instance_valid(app.overlay) and _button(app.overlay, "Let's play  ·  36 pieces") != null,
-		"New free Sakura artwork opens directly in the difficulty chooser.")
+		"New free Macaron artwork opens directly in the difficulty chooser.")
 	_press(app.overlay, "400")
 	_press(app.overlay, "Let's play  ·  400 pieces")
 	await process_frame
 	_check(is_instance_valid(app.board) and app.grid_size == 20 and app.board.pieces.size() == 400,
-		"New Sakura artwork starts a playable four-hundred-piece board.")
-	_check(app.current_puzzle.id == "sakura_stroll" and is_instance_valid(app.board) and is_instance_valid(app.board.puzzle_texture)
-		and app.board.puzzle_texture.resource_path == "res://assets/puzzles/sakura_stroll.png",
-		"The new board renders Sakura artwork rather than a missing or previous texture.")
+		"New Macaron artwork starts a playable four-hundred-piece board.")
+	_check(app.current_puzzle.id == "macaron_morning" and is_instance_valid(app.board) and is_instance_valid(app.board.puzzle_texture)
+		and app.board.puzzle_texture.resource_path == "res://assets/puzzles/macaron_morning.png",
+		"The new board renders Macaron artwork rather than a missing or previous texture.")
+	_check(app.board.puzzle_texture.get_width() >= 1024, "Gameplay keeps the original PNG resolution rather than the gallery thumbnail.")
 	_press(app.page, "Hint")
-	var sakura_session: Dictionary = app.state.get_session("sakura_stroll", 20)
-	_check(app.board.placed_count == 1 and sakura_session.get("state", {}).get("placed", []).size() == 1,
+	var macaron_session: Dictionary = app.state.get_session("macaron_morning", 20)
+	_check(app.board.placed_count == 1 and macaron_session.get("state", {}).get("placed", []).size() == 1,
 		"A new four-hundred-piece puzzle saves real progress through the same gameplay flow.")
 	_press(app.page, "Save and return to gallery")
 	await _settle_layout()

@@ -142,7 +142,10 @@ def main():
         assert save["coins"] == 125, "One easy puzzle must award 25 coins"
 
         # Keep the expansion independent from the original save/reward flow.
-        # Selecting New must surface Sakura Stroll, which is playable for free.
+        # Release the completed game's WebGL context before loading another copy.
+        context.close()
+
+        # Selecting New must surface Macaron Morning, which is playable for free.
         expansion = browser.new_context(viewport={"width": 480, "height": 900}, device_scale_factor=1)
         expansion_page = expansion.new_page()
         monitor(expansion_page)
@@ -155,7 +158,7 @@ def main():
         expansion_page.wait_for_timeout(400)
         expansion_page.mouse.click(416, 650)
         expansion_page.wait_for_timeout(300)
-        expansion_page.screenshot(path=str(args.screenshots / "sakura-selection-400.png"))
+        expansion_page.screenshot(path=str(args.screenshots / "macaron-selection-400.png"))
         expansion_page.mouse.click(238, 800)
         expansion_page.wait_for_timeout(3600)
         expansion_page.mouse.click(53, 842)
@@ -164,13 +167,13 @@ def main():
         expansion_page.mouse.wheel(0, -200)
         expansion_page.wait_for_timeout(3800)
         expansion_save = read_save(expansion_page)
-        assert "sakura_stroll:20:classic" in expansion_save["sessions"], "New must open the new free Sakura puzzle at 400 pieces"
-        expansion_session = expansion_save["sessions"]["sakura_stroll:20:classic"]
+        assert "macaron_morning:20:classic" in expansion_save["sessions"], "New must open the new free Macaron puzzle at 400 pieces"
+        expansion_session = expansion_save["sessions"]["macaron_morning:20:classic"]
         assert expansion_session["grid"] == 20 and expansion_session["state"]["grid"] == 20
         assert len(expansion_session["state"]["placed"]) == 1, "A hint must work on the new 400-piece board"
         assert expansion_session["state"]["zoom"] > 1, "The new 400-piece board must support zoom"
         assert expansion_save["coins"] == 100, "Starting free expansion content must not spend coins"
-        expansion_page.screenshot(path=str(args.screenshots / "sakura-gameplay-400.png"))
+        expansion_page.screenshot(path=str(args.screenshots / "macaron-gameplay-400.png"))
         expansion.close()
 
         for width, height, name in [(390, 844, "gallery-phone"), (320, 568, "gallery-small-phone")]:
@@ -181,10 +184,9 @@ def main():
             phone_page.wait_for_timeout(1400)
             phone_page.screenshot(path=str(args.screenshots / f"{name}.png"))
             phone.close()
-        context.close()
         browser.close()
     assert not errors, "Browser/Godot errors: " + repr(list(dict.fromkeys(errors)))
-    print("PASS: drag, hints, IndexedDB autosave, reload/resume, completion, +25 coins, new Sakura 400-piece puzzle/zoom, narrow phone layouts, and no browser/Godot errors.")
+    print("PASS: drag, hints, IndexedDB autosave, reload/resume, completion, +25 coins, new Macaron 400-piece puzzle/zoom, narrow phone layouts, and no browser/Godot errors.")
     print(f"Screenshots: {args.screenshots}")
 
 

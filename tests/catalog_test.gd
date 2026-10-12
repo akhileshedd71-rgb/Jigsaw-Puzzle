@@ -4,16 +4,52 @@ extends SceneTree
 const State = preload("res://scripts/game_state.gd")
 const Board = preload("res://scripts/puzzle_board.gd")
 const NEW_IDS: Array[String] = [
-	"sakura_stroll", "rainbow_harbor", "starlight_castle", "foxglove_forest",
-	"penguin_party", "balloon_valley", "cactus_carnival", "waterfall_wonder",
-	"sunflower_fields", "autumn_river", "lighthouse_bay", "lavender_hills",
-	"panda_picnic", "otter_oasis", "butterfly_garden", "jellyfish_jubilee",
-	"sweet_shop", "cosmic_carnival",
+	"macaron_morning",
+	"berry_brunch",
+	"sushi_symphony",
+	"gelato_parade",
+	"saturn_picnic",
+	"lunar_greenhouse",
+	"nebula_observatory",
+	"comet_express",
+	"dino_watering_hole",
+	"triceratops_trail",
+	"pterosaur_lagoon",
+	"lantern_river",
+	"carnival_of_colors",
+	"winter_market",
+	"storybook_library",
+	"artist_sunroom",
+	"baker_workshop",
+	"mosaic_courtyard",
+	"clockwork_square",
+	"floating_palazzo",
 ]
 const ORIGINAL: Dictionary = {
-	"alpine_escape": [0, "png"], "coral_cove": [0, "svg"],
-	"citrus_sunshine": [0, "svg"], "moonlight_meadow": [0, "svg"],
-	"toucan_tropics": [120, "svg"], "candy_coast": [180, "svg"],
+	"alpine_escape": [0, "png"],
+	"coral_cove": [0, "svg"],
+	"citrus_sunshine": [0, "svg"],
+	"moonlight_meadow": [0, "svg"],
+	"toucan_tropics": [120, "svg"],
+	"candy_coast": [180, "svg"],
+	"sakura_stroll": [0, "png"],
+	"rainbow_harbor": [0, "png"],
+	"starlight_castle": [200, "png"],
+	"foxglove_forest": [0, "png"],
+	"penguin_party": [0, "png"],
+	"balloon_valley": [0, "png"],
+	"cactus_carnival": [0, "svg"],
+	"waterfall_wonder": [0, "svg"],
+	"sunflower_fields": [0, "svg"],
+	"autumn_river": [0, "svg"],
+	"lighthouse_bay": [140, "svg"],
+	"lavender_hills": [160, "svg"],
+	"panda_picnic": [0, "svg"],
+	"otter_oasis": [180, "svg"],
+	"butterfly_garden": [0, "svg"],
+	"jellyfish_jubilee": [160, "svg"],
+	"sweet_shop": [140, "svg"],
+	"cosmic_carnival": [200, "svg"],
 }
 
 var checks: int = 0
@@ -36,9 +72,9 @@ func _run() -> void:
 	temporary_dir = "/tmp/piecepop-catalog-test-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
 	DirAccess.make_dir_recursive_absolute(temporary_dir)
 	var state: Node = State.new(temporary_dir.path_join("catalog.json"))
-	_check(state.get_catalog().size() == 24, "The collection contains 24 puzzles.")
-	_check(state.get_free_catalog().size() == 15, "The collection contains 15 free puzzles.")
-	_check(state.get_categories() == ["Nature", "Art", "Animals", "Places", "Fantasy"], "All categories are derived in first-seen order.")
+	_check(state.get_catalog().size() == 44, "The collection contains 44 puzzles.")
+	_check(state.get_free_catalog().size() == 28, "The collection contains 28 free puzzles.")
+	_check(state.get_categories() == ["Nature", "Art", "Animals", "Places", "Fantasy", "Food", "Space", "Dinosaurs", "Festivals", "Cozy Rooms", "Architecture"], "All categories are derived in first-seen order.")
 	var ids: Dictionary = {}
 	var asset_paths: Dictionary = {}
 	var paid_count: int = 0
@@ -58,7 +94,7 @@ func _run() -> void:
 		_check(texture != null, "Godot imports artwork: " + puzzle.id)
 		if texture != null:
 			_check(texture.get_width() >= 1024 and texture.get_height() >= 1024, "Artwork is large enough for 400 pieces: " + puzzle.id)
-	_check(paid_count == 9, "Nine collections can be unlocked with earned coins.")
+	_check(paid_count == 16, "Sixteen puzzles can be unlocked with earned coins.")
 	for puzzle_id: String in ORIGINAL:
 		var original: Dictionary = state.puzzle_by_id(puzzle_id)
 		_check(not original.is_empty(), "Original puzzle is retained: " + puzzle_id)
@@ -67,6 +103,7 @@ func _run() -> void:
 		_check(not original.get("is_new", false), "Original artwork is not mislabeled as new: " + puzzle_id)
 	for puzzle_id: String in NEW_IDS:
 		_check(state.puzzle_by_id(puzzle_id).get("is_new", false), "Added artwork is marked new: " + puzzle_id)
+		_check(state.puzzle_by_id(puzzle_id).asset.ends_with(".png"), "Each new puzzle uses a generated PNG: " + puzzle_id)
 	var copied_free: Array = state.get_free_catalog()
 	copied_free[0].price = 999
 	_check(state.get_free_catalog()[0].price == 0, "Free catalog entries cannot mutate catalog ownership.")
@@ -124,7 +161,7 @@ func _test_new_difficulties(state: Node) -> void:
 	board.free()
 	var restored: Node = State.new(state.storage_path)
 	_check(not restored.recovered_corrupt_save, "Expanded collection saves do not trigger legacy session-count limits.")
-	_check(restored.get_sessions().size() == NEW_IDS.size() * State.GRIDS.size(), "All 90 new puzzle and difficulty combinations persist.")
+	_check(restored.get_sessions().size() == NEW_IDS.size() * State.GRIDS.size(), "All 100 new puzzle and difficulty combinations persist.")
 	for puzzle_id: String in NEW_IDS:
 		for grid: int in State.GRIDS:
 			var session: Dictionary = restored.get_session(puzzle_id, grid)
@@ -141,29 +178,41 @@ func _test_original_save_compatibility() -> void:
 		"run_id": 3, "updated_at": 1780000000,
 	}
 	var payload: Dictionary = {
-		"version": 1, "coins": 345, "unlocked": ["toucan_tropics", "candy_coast"],
+		"version": 1, "coins": 345, "unlocked": ["toucan_tropics", "candy_coast", "starlight_castle"],
 		"preferences": {"background_index": 2, "sound_enabled": false, "haptics_enabled": true},
 		"sessions": {"alpine_escape:6:classic": original_session},
 	}
+	var previous_expansion: Dictionary = original_session.duplicate(true)
+	previous_expansion.id = "sakura_stroll"
+	previous_expansion.grid = 20
+	previous_expansion.mystery = true
+	previous_expansion.state = {"placed": [5, 399], "zoom": 2.0}
+	payload.sessions["sakura_stroll:20:mystery"] = previous_expansion
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(payload))
 	file.close()
 	var before: String = FileAccess.get_file_as_string(path)
 	var state: Node = State.new(path)
-	_check(not state.recovered_corrupt_save, "A save from the original six-puzzle collection remains valid.")
+	_check(not state.recovered_corrupt_save, "A save containing both previous collections remains valid.")
 	_check(state.coins == 345, "Expansion preserves the original coin balance.")
 	_check(state.is_unlocked("toucan_tropics") and state.is_unlocked("candy_coast"), "Expansion preserves purchased original puzzles.")
+	_check(state.is_unlocked("starlight_castle"), "A paid unlock from the previous expansion remains owned.")
+	_check(state.get_session("sakura_stroll", 20, true).state.placed == [5, 399], "A previous 400-piece mystery game retains its placed pieces.")
 	_check(state.background_index == 2 and not state.sound_enabled and state.haptics_enabled, "Expansion preserves original preferences.")
 	var restored: Dictionary = state.get_session("alpine_escape", 6)
 	_check(restored.run_id == 3 and restored.state.placed == [0, 1] and is_equal_approx(restored.state.zoom, 1.5), "Expansion preserves original session progress and replay identity.")
 	_check(FileAccess.get_file_as_string(path) == before, "Reading an original save does not rewrite it.")
 	state.begin_session("sakura_stroll", 20)
 	state.save_session("sakura_stroll", 20, false, {"placed": [3, 399]})
+	state.begin_session("macaron_morning", 20)
+	state.save_session("macaron_morning", 20, false, {"placed": [7, 398]})
 	state.free()
 	state = State.new(path)
 	_check(state.coins == 345, "Starting a free new puzzle leaves original coins unchanged.")
 	_check(state.is_unlocked("toucan_tropics") and state.is_unlocked("candy_coast"), "New progress does not remove original purchases.")
 	_check(state.get_session("alpine_escape", 6) == restored, "New progress leaves the original session untouched.")
 	_check(state.get_session("sakura_stroll", 20).state.placed == [3, 399], "New and original sessions can coexist in version 1.")
+	_check(state.get_session("sakura_stroll", 20, true).state.placed == [5, 399], "Starting new PNG puzzles preserves the previous mystery session.")
+	_check(state.get_session("macaron_morning", 20).state.placed == [7, 398], "The latest PNG session reloads alongside both older collections.")
 	_check(int(JSON.parse_string(FileAccess.get_file_as_string(path)).version) == 1, "No save version migration is needed.")
 	state.free()

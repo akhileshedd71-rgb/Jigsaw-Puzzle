@@ -29,9 +29,9 @@ func _check(condition: bool, message: String) -> void:
 
 func _test_catalog_and_daily() -> void:
 	var state: Node = State.new(temporary_dir.path_join("catalog.json"))
-	_check(state.get_catalog().size() == 24, "All 24 puzzles must be available.")
-	_check(state.get_free_catalog().size() == 15, "Daily collection includes all 15 free puzzles.")
-	_check(state.get_categories() == ["Nature", "Art", "Animals", "Places", "Fantasy"], "Categories are derived in catalog order.")
+	_check(state.get_catalog().size() == 44, "All 44 puzzles must be available.")
+	_check(state.get_free_catalog().size() == 28, "Daily collection includes all 28 free puzzles.")
+	_check(state.get_categories() == ["Nature", "Art", "Animals", "Places", "Fantasy", "Food", "Space", "Dinosaurs", "Festivals", "Cozy Rooms", "Architecture"], "Categories are derived in catalog order.")
 	_check(state.coins == 100, "Fresh player starts with 100 coins.")
 	_check(state.is_unlocked("alpine_escape"), "Starter artwork is free.")
 	_check(not state.is_unlocked("unknown"), "Unknown artwork cannot be unlocked.")

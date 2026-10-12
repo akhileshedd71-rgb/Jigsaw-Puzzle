@@ -21,7 +21,7 @@ All 18 square SVG illustrations in `assets/puzzles` were created specifically fo
 - `sweet_shop.svg` — an illustrated pastry shop with striped awnings, cakes, and flowers.
 - `cosmic_carnival.svg` — a colorful fairground among planets, stars, and a candy-colored rocket.
 
-Seven painted puzzle illustrations were created for this project using OpenAI image generation:
+Twenty-seven painted puzzle illustrations were created for this project using OpenAI image generation:
 
 - `alpine_escape.png` — the original alpine lake and cabin.
 - `sakura_stroll.png` — cherry blossoms, a riverside village, and an arched bridge.
@@ -30,6 +30,29 @@ Seven painted puzzle illustrations were created for this project using OpenAI im
 - `foxglove_forest.png` — woodland foxes, a tiny cottage, flowers, and a stream.
 - `penguin_party.png` — penguins on a sparkling island beneath a bright polar sky.
 - `balloon_valley.png` — hot-air balloons over a sunlit rock valley and village.
+
+The following 20 PNG illustrations were added for version 0.3.0, each as a separate generated image:
+
+- `macaron_morning.png` — Macaron Morning (Food).
+- `berry_brunch.png` — Berry Brunch (Food).
+- `sushi_symphony.png` — Sushi Symphony (Food).
+- `gelato_parade.png` — Gelato Parade (Food).
+- `saturn_picnic.png` — Saturn Picnic (Space).
+- `lunar_greenhouse.png` — Lunar Greenhouse (Space).
+- `nebula_observatory.png` — Nebula Observatory (Space).
+- `comet_express.png` — Comet Express (Space).
+- `dino_watering_hole.png` — Dino Watering Hole (Dinosaurs).
+- `triceratops_trail.png` — Triceratops Trail (Dinosaurs).
+- `pterosaur_lagoon.png` — Pterosaur Lagoon (Dinosaurs).
+- `lantern_river.png` — Lantern River (Festivals).
+- `carnival_of_colors.png` — Carnival of Colors (Festivals).
+- `winter_market.png` — Winter Market (Festivals).
+- `storybook_library.png` — Storybook Library (Cozy Rooms).
+- `artist_sunroom.png` — Artist Sunroom (Cozy Rooms).
+- `baker_workshop.png` — Baker Workshop (Cozy Rooms).
+- `mosaic_courtyard.png` — Mosaic Courtyard (Architecture).
+- `clockwork_square.png` — Clockwork Square (Architecture).
+- `floating_palazzo.png` — Floating Palazzo (Architecture).
 
 The project owner may use, modify, redistribute, and publish these original assets with this game, including commercially. No additional asset attribution is required. This note documents the assets' provenance; it does not grant rights to third-party trademarks or imply any connection to Easybrain.
 

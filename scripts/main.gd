@@ -14,6 +14,7 @@ var overlay: Control
 var toast_layer: Control
 var coin_labels: Array[Label] = []
 var textures: Dictionary = {}
+var thumbnails: Dictionary = {}
 var current_tab = "gallery"
 var category = "All"
 var current_puzzle: Dictionary = {}
@@ -109,8 +110,22 @@ func _new_page() -> void:
 
 func _texture(puzzle: Dictionary) -> Texture2D:
 	if not textures.has(puzzle.id):
+		# Keep full-resolution art for the current puzzle and recent previews.
+		# A larger collection should not keep every original in mobile GPU memory.
+		if textures.size() >= 3:
+			textures.erase(textures.keys()[0])
 		textures[puzzle.id] = load(puzzle.asset)
 	return textures[puzzle.id]
+
+func _thumbnail(puzzle: Dictionary) -> Texture2D:
+	if not thumbnails.has(puzzle.id):
+		var source = ResourceLoader.load(puzzle.asset, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+		var picture = source.get_image()
+		if picture.is_compressed():
+			picture.decompress()
+		picture.resize(512, 512, Image.INTERPOLATE_LANCZOS)
+		thumbnails[puzzle.id] = ImageTexture.create_from_image(picture)
+	return thumbnails[puzzle.id]
 
 func _header() -> void:
 	var row = HBoxContainer.new()
@@ -217,7 +232,11 @@ func show_gallery() -> void:
 	body.add_child(filter_scroll)
 	var filters = UI.hbox(filter_scroll,8)
 	var categories: Array = ["All", "New"]
-	categories.append_array(state.get_categories())
+	for puzzle in state.get_catalog():
+		if puzzle.get("is_new", false) and puzzle.category not in categories:
+			categories.append(puzzle.category)
+	for item in state.get_categories():
+		if item not in categories: categories.append(item)
 	var selected_filter: Control
 	for cat in categories:
 		var filter = UI.button(cat,UI.PURPLE if cat == category else Color.WHITE,Color.WHITE if cat == category else UI.MUTED,39,15)
@@ -317,7 +336,7 @@ func _puzzle_card(puzzle: Dictionary) -> Control:
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.custom_minimum_size.x = (frame.size.x-58)/2.0
 	card.tooltip_text = puzzle.title
-	var artwork = UI.image_rect(_texture(puzzle),17)
+	var artwork = UI.image_rect(_thumbnail(puzzle),17)
 	card.add_child(artwork)
 	artwork.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	artwork.offset_left = 7
@@ -417,7 +436,7 @@ func show_saved() -> void:
 			var mystery_icon = UI.icon("puzzle",UI.PURPLE,70)
 			row.add_child(mystery_icon)
 		else:
-			var image = UI.image_rect(_texture(puzzle),12)
+			var image = UI.image_rect(_thumbnail(puzzle),12)
 			image.custom_minimum_size = Vector2(88,88)
 			row.add_child(image)
 		var stack = UI.vbox(row,3)

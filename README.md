@@ -31,11 +31,22 @@ The existing checkout is `/workspace/Jigsaw-Puzzle`. Godot 4.6.3 and the matchin
 
 Browse a category, open a puzzle, and choose **36, 100, 144, 256, or 400 pieces**. Drag pieces from the bottom tray to the board; correct neighbors join into movable groups and correctly placed pieces snap home. Touch and mouse use the same controls. Use the hints, reference image, edge filter, zoom controls, and background switcher while solving. Mystery mode hides the reference. Progress and earned coins are stored locally in Godot's `user://` directory. Web saves depend on browser site storage and are removed if the site's data is cleared.
 
-The library contains **24 original puzzles** across Nature, Animals, Art, Places, and Fantasy: **15 are free** and **9 unlock with earned coins**. The **New** gallery filter highlights the 18 illustrations added in version 0.2.0. Every puzzle supports all five difficulties (120 image/difficulty combinations), with classic and mystery play.
+The library contains **44 original puzzles** in **11 categories**: Nature, Animals, Art, Places, Fantasy, Food, Space, Dinosaurs, Festivals, Cozy Rooms, and Architecture. **28 puzzles are free** and **16 unlock with earned coins**. Every puzzle supports 36, 100, 144, 256, and 400 pieces (220 image/difficulty combinations), with classic and mystery play.
 
-The daily puzzle rotates through all 15 free images by local date, so each appears once per 15-day cycle. Every illustration is bundled for offline play. Updating from the original six-puzzle version preserves existing progress, coins, and purchases.
+Version **0.3.0** adds **20 individually generated, 1254 × 1254 PNG illustrations**. The **New** filter highlights only this collection, and its six new categories appear first in the gallery filters. Earlier collections remain available in All and their original categories.
 
-New scenes include Sakura Stroll, Rainbow Harbor, Starlight Castle, Foxglove Forest, Penguin Party, Balloon Valley, Cactus Carnival, Waterfall Wonder, Sunflower Fields, Autumn River, Lighthouse Bay, Lavender Hills, Panda Picnic, Otter Oasis, Butterfly Garden, Jellyfish Jubilee, Sweet Shop, and Cosmic Carnival.
+| Category | New puzzles |
+| --- | --- |
+| Food | Macaron Morning, Berry Brunch, Sushi Symphony, Gelato Parade |
+| Space | Saturn Picnic, Lunar Greenhouse, Nebula Observatory, Comet Express |
+| Dinosaurs | Dino Watering Hole, Triceratops Trail, Pterosaur Lagoon |
+| Festivals | Lantern River, Carnival of Colors, Winter Market |
+| Cozy Rooms | Storybook Library, Artist Sunroom, Baker Workshop |
+| Architecture | Mosaic Courtyard, Clockwork Square, Floating Palazzo |
+
+The daily puzzle rotates through all 28 free images by local date, once per 28-day cycle. Every illustration is bundled for offline play. Existing puzzle IDs, coin balances, purchases, and unfinished games remain compatible with earlier saves.
+
+The gallery caches 512-pixel previews and a small number of recent full-resolution images. Puzzle boards always use the original artwork, so zooming and 400-piece play retain full detail without keeping the entire collection in GPU memory.
 
 ## Validate
 
