@@ -2,6 +2,18 @@
 
 A cheerful, portrait-first jigsaw game built with **Godot 4.6.3** and GDScript. Pink, aqua, purple, warm yellow, original scenery, and soft dimensional controls keep the gallery playful while the puzzle board stays quiet and readable.
 
+## Screenshots
+
+Actual screenshots of version 0.3.0 running in Chromium at a 480 × 900 portrait viewport. Select an image to view the full-size PNG.
+
+| Puzzle gallery | 20 new puzzles | Choose your difficulty |
+| --- | --- | --- |
+| [<img src="docs/screenshots/gallery.png" width="240" alt="Piecepop gallery with 44 puzzles and category filters">](docs/screenshots/gallery.png) | [<img src="docs/screenshots/new-puzzles.png" width="240" alt="New collection showing Macaron Morning and Berry Brunch">](docs/screenshots/new-puzzles.png) | [<img src="docs/screenshots/difficulty.png" width="240" alt="Macaron Morning with the 400-piece difficulty selected">](docs/screenshots/difficulty.png) |
+
+| 36-piece gameplay | 400-piece gameplay and zoom | Completion and rewards |
+| --- | --- | --- |
+| [<img src="docs/screenshots/gameplay.png" width="240" alt="Alpine Escape with placed pieces, a scrolling tray, and puzzle tools">](docs/screenshots/gameplay.png) | [<img src="docs/screenshots/gameplay-400.png" width="240" alt="Macaron Morning at 400 pieces with zoom and saved progress">](docs/screenshots/gameplay-400.png) | [<img src="docs/screenshots/completed.png" width="240" alt="Completed Alpine Escape puzzle awarding 25 coins">](docs/screenshots/completed.png) |
+
 ## Run the game
 
 1. Install the standard edition of [Godot 4.6.3](https://github.com/godotengine/godot-builds/releases/tag/4.6.3-stable).
